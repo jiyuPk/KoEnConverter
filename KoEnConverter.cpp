@@ -10,12 +10,13 @@
 HINSTANCE hInst;                                // current instance
 WCHAR szTitle[MAX_LOADSTRING];                  // The title bar text
 WCHAR szWindowClass[MAX_LOADSTRING];            // the main window class name
+NOTIFYICONDATA notifyIconData;
 
 // Forward declarations of functions included in this code module:
 ATOM                MyRegisterClass(HINSTANCE hInstance);
 BOOL                InitInstance(HINSTANCE);
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
-INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
+void InitNotifyIconData(HWND hWnd);
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                      _In_opt_ HINSTANCE hPrevInstance,
@@ -55,13 +56,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     return (int) msg.wParam;
 }
 
-
-
-//
-//  FUNCTION: MyRegisterClass()
-//
-//  PURPOSE: Registers the window class.
-//
 ATOM MyRegisterClass(HINSTANCE hInstance)
 {
     WNDCLASSEXW wcex;
@@ -83,16 +77,6 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
     return RegisterClassExW(&wcex);
 }
 
-//
-//   FUNCTION: InitInstance(HINSTANCE, int)
-//
-//   PURPOSE: Saves instance handle and creates main window
-//
-//   COMMENTS:
-//
-//        In this function, we save the instance handle in a global variable and
-//        create and display the main program window.
-//
 BOOL InitInstance(HINSTANCE hInstance)
 {
    hInst = hInstance; // Store instance handle in our global variable
@@ -104,6 +88,8 @@ BOOL InitInstance(HINSTANCE hInstance)
    {
       return FALSE;
    }
+
+   InitNotifyIconData(hWnd);
 
    ShowWindow(hWnd, SW_HIDE);
    UpdateWindow(hWnd);
@@ -124,3 +110,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     return 0;
 }
 
+void InitNotifyIconData(HWND hWnd)
+{
+    notifyIconData.cbSize = sizeof(notifyIconData);
+    notifyIconData.hWnd = hWnd;
+    notifyIconData.uID = TRAY_ICON_ID;
+    notifyIconData.uFlags = NIF_ICON | NIF_MESSAGE | NIF_TIP;
+    notifyIconData.uCallbackMessage = WM_SYSICON;
+    notifyIconData.hIcon = (HICON)LoadIcon(GetModuleHandle(NULL), MAKEINTRESOURCE(IDI_KOENCONVERTER));
+    wcsncpy_s(notifyIconData.szTip, L"KoEnConverter", sizeof(L"KoEnConverter"));
+}

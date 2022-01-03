@@ -13,6 +13,10 @@
 #define IDI_SMALL				108
 #define IDC_KOENCONVERTER			109
 #define IDC_MYICON				2
+
+#define TRAY_ICON_ID            1000
+#define WM_SYSICON          (WM_USER + 1)
+
 #ifndef IDC_STATIC
 #define IDC_STATIC				-1
 #endif
