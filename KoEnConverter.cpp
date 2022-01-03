@@ -14,7 +14,7 @@ NOTIFYICONDATA notifyIconData;
 
 // Forward declarations of functions included in this code module:
 ATOM                MyRegisterClass(HINSTANCE hInstance);
-BOOL                InitInstance(HINSTANCE);
+BOOL                InitInstance(HINSTANCE, int);
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 void InitNotifyIconData(HWND hWnd);
 
@@ -34,7 +34,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     MyRegisterClass(hInstance);
 
     // Perform application initialization:
-    if (!InitInstance (hInstance))
+    if (!InitInstance (hInstance, nCmdShow))
     {
         return FALSE;
     }
@@ -73,16 +73,17 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
     wcex.lpszMenuName   = MAKEINTRESOURCEW(IDC_KOENCONVERTER);
     wcex.lpszClassName  = szWindowClass;
     wcex.hIconSm        = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
+    
 
     return RegisterClassExW(&wcex);
 }
 
-BOOL InitInstance(HINSTANCE hInstance)
+BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
    hInst = hInstance; // Store instance handle in our global variable
 
-   HWND hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
-      CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, nullptr);
+   HWND hWnd = CreateWindowW(szWindowClass, szTitle,WS_BORDER,
+      0, 0, 0, 0, nullptr, nullptr, hInstance, nullptr);
 
    if (!hWnd)
    {
@@ -91,16 +92,20 @@ BOOL InitInstance(HINSTANCE hInstance)
 
    InitNotifyIconData(hWnd);
 
+   ShowWindow(hWnd, nCmdShow);
    ShowWindow(hWnd, SW_HIDE);
    UpdateWindow(hWnd);
-
    return TRUE;
 }
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+
     switch (message)
     {
+    case WM_ACTIVATE:
+        Shell_NotifyIcon(NIM_ADD, &notifyIconData);
+        break;
     case WM_DESTROY:
         PostQuitMessage(0);
         break;
