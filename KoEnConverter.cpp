@@ -1,5 +1,12 @@
 // KoEnConverter.cpp : Defines the entry point for the application.
 //
+#pragma comment(linker, "/entry:wWinMainCRTStartup /subsystem:console") 
+#include <iostream>
+int main()
+{
+    using namespace std;
+    cout << "Hello" << endl;
+}
 
 #include "framework.h"
 #include "KoEnConverter.h"
@@ -23,6 +30,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                      _In_ LPWSTR    lpCmdLine,
                      _In_ int       nCmdShow)
 {
+    main();
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
 
@@ -125,3 +133,5 @@ void InitNotifyIconData(HWND hWnd)
     notifyIconData.hIcon = (HICON)LoadIcon(GetModuleHandle(NULL), MAKEINTRESOURCE(IDI_KOENCONVERTER));
     wcsncpy_s(notifyIconData.szTip, L"KoEnConverter", sizeof(L"KoEnConverter"));
 }
+
+
