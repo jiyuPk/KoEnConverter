@@ -16,6 +16,7 @@
 
 #define TRAY_ICON_ID            1000
 #define WM_SYSICON          (WM_USER + 1)
+#define WM_DLG_CLOSE WM_USER + 2
 
 #ifndef IDC_STATIC
 #define IDC_STATIC				-1

@@ -109,6 +109,25 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     case WM_DESTROY:
         PostQuitMessage(0);
         break;
+    case WM_SYSICON:
+        if (TRAY_ICON_ID == wParam)
+        {
+        	if (lParam == WM_RBUTTONDOWN)
+        	{
+                POINT curCursor;
+        		HMENU hMenu = CreatePopupMenu();
+        		AppendMenu(hMenu, MF_STRING, WM_DLG_CLOSE, TEXT("Exit"));
+
+                SetForegroundWindow(hWnd);
+                GetCursorPos(&curCursor);
+                TrackPopupMenu(hMenu, TPM_LEFTALIGN | TPM_RIGHTBUTTON, curCursor.x, curCursor.y, 0, hWnd, NULL);
+        	}
+            break;
+        }
+    case WM_COMMAND:
+        if (WM_DLG_CLOSE)
+            PostQuitMessage(0);
+        break;
     default:
         return DefWindowProc(hWnd, message, wParam, lParam);
     }
